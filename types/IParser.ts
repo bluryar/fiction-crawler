@@ -20,6 +20,7 @@ export interface IDetail {
 }
 
 export interface IChapters {
+  index: number;
   title: string;
   link: string;
 }

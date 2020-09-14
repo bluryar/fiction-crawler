@@ -18,6 +18,7 @@ describe('src/Parser/* Parser#parseHomePage', () => {
     assert(res.chapters.length > 10);
     assert(/html/gi.test(res.chapters[0].link));
     assert(res.author.length > 0);
+    assert(res.chapters.length === res.chapters[res.chapters.length - 1].index + 1);
   });
 
   it('should return a chapter text', () => {

@@ -9,10 +9,10 @@ export class Book extends MyBasicEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: '50' })
   public title: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: '50' })
   public author: string;
 
   @Column()

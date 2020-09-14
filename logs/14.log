@@ -18,3 +18,21 @@
 {"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","__tag":1,"level":"error","timestamp":"2020-09-14T09:11:34.731Z"}
 {"message":"数据库连接失败, 请检查数据库配置文件和网络...","level":"error","timestamp":"2020-09-14T09:12:54.943Z"}
 {"message":"ER_DUP_ENTRY: Duplicate entry '唐砖-孑与2' for key 'IDX_9a180d22ddb2ef9d496539e534'","code":"ER_DUP_ENTRY","errno":1062,"sqlMessage":"Duplicate entry '唐砖-孑与2' for key 'IDX_9a180d22ddb2ef9d496539e534'","sqlState":"23000","index":0,"sql":"INSERT INTO `book`(`created_at`, `updated_at`, `id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, DEFAULT, DEFAULT, '唐砖', '孑与2', 'http://www.xbiquge.la/files/article/image/0/993/993s.jpg', '    云烨一直以为自己是一个超级极恋家的人，哪怕把自己放在火星，也会绑架火星人让他们送自己地球。现在麻烦了，自己如何才能从贞观二年回到公元两千一零年？\\n')","name":"QueryFailedError","query":"INSERT INTO `book`(`created_at`, `updated_at`, `id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, DEFAULT, DEFAULT, ?, ?, ?, ?)","parameters":["唐砖","孑与2","http://www.xbiquge.la/files/article/image/0/993/993s.jpg","    云烨一直以为自己是一个超级极恋家的人，哪怕把自己放在火星，也会绑架火星人让他们送自己地球。现在麻烦了，自己如何才能从贞观二年回到公元两千一零年？\n"],"__tag":1,"level":"error","timestamp":"2020-09-14T09:12:54.943Z"}
+{"message":"<<唐砖>> 章节: 第三节残破的朔方（求月票） 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:06:01.825Z"}
+{"message":"<<唐砖>> 章节: 第四十一节胜利与疲惫 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:09:14.757Z"}
+{"message":"<<唐砖>> 章节: 我尽力了， 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:10:40.458Z"}
+{"message":"<<牧神记>> 章节: 第三百零三章 霸体巨人 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:13:28.220Z"}
+{"message":"<<牧神记>> 章节: 晚上两章一起更新！ 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:15:41.732Z"}
+{"message":"<<牧神记>> 章节: 第四百一十八章 震鼎 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:22:54.642Z"}
+{"message":"<<牧神记>> 章节: 第四百四十五章 夜袭 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:25:22.182Z"}
+{"message":"<<唐砖>> 章节: 第四十八节老程危险了（第二节求票） 下载失败... 跳过该章节...","level":"error","timestamp":"2020-09-14T12:26:04.231Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T13:49:00.949Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T13:49:00.951Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T13:50:17.339Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T13:50:17.340Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T13:54:24.747Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T13:54:24.749Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T13:55:33.243Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T13:55:33.244Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T13:56:18.325Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T13:56:18.326Z"}

@@ -115,7 +115,7 @@ export class LocalTask implements ITask {
         error.__tag = TASK_ERROR_TYPE.HTTP_ERROR;
         httpErrorArr.push(error);
         this.detailFailQueue.push(url);
-        logger.error(`小说: ${url} 下载失败... 跳过该书籍...`)
+        logger.error(`小说: ${url} 下载失败... 跳过该书籍...`);
         continue;
       }
 
@@ -161,12 +161,13 @@ export class LocalTask implements ITask {
           const failChapters = this.contentFailQueue.get(book);
           failChapters.push(titleUrlMap);
         } else this.contentFailQueue.set(book, [titleUrlMap]);
-        logger.error(`<<${book.title}>> 章节: ${titleUrlMap.title} 下载失败... 跳过该章节...`)
+        logger.error(`<<${book.title}>> 章节: ${titleUrlMap.title} 下载失败... 跳过该章节...`);
         continue; // 终止本次请求及其后续数据库操作
       }
 
       const res = this.parser.parseContent(contentPageHtml);
       const chapter = new Chapter();
+      chapter.index = titleUrlMap.index;
       chapter.book = book;
       chapter.content = res;
       chapter.title = titleUrlMap.title;
@@ -184,3 +185,11 @@ export class LocalTask implements ITask {
     if (httpErrorArr.length > 0) throw bundleHttpError(httpErrorArr); // 集中处理HTTP请求错误
   }
 }
+
+// TODO 修正《:"ER_DUP_ENTRY: Duplicate entry 》 引起的数据库连接错误，需要在Chapter实体上增加一个唯一键，然后在次增加逻辑，当遇到DUP_ENTRY时，不再退出程序。
+// 对于getDetailPage，需要校验在DetailPage获得的连接数与数据库中的Chapters数是否一致，否则应该放行，如果一直，则需要跳过这本书
+// 对于getContentPage，则无视DUP约束，当遇到DUP错误时跳过。
+
+// 以上功能与失败处理方法有冲突：失败处理会尽可能保证书籍的章节完整性，因此该功能需要谨慎实现以减少不必要的HTTP请求数
+
+// TODO 压缩存储

@@ -34,12 +34,13 @@ describe('src/task/LocalTask.ts', async function () {
     book.coverImgLink = '1';
     const book2 = await book.save();
     task.contentFailQueue.set(book2, [
-      { title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
+      { index: 1, title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
     ]);
     await task.handlingFailQueue(1);
     let chapters = await Chapter.findOne({});
     assert(chapters.title === '第一章 天黑别出门');
   });
+
   it('LocalTask#getDetailPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
@@ -50,15 +51,18 @@ describe('src/task/LocalTask.ts', async function () {
     assert(books.length === 1);
     assert(books[0].title === '牧神记');
   });
+
   it('LocalTask#getContentPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
     let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
-    await task.getContentPage([{ title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' }]);
-
+    await task.getContentPage([
+      { index: 1, title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
+    ]);
     let chapters: Chapter[] = await Chapter.find({});
     assert(chapters.length === 1);
     assert(chapters[0].title === '第一章 天黑别出门');
+    assert(chapters[0].index === 1);
   });
 
   after(async () => {

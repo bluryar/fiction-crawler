@@ -35,8 +35,9 @@ export class XbiqugeLaParser implements IParser {
       chapters: $('#list > dl')
         .children()
         .toArray()
-        .map((ele) => {
+        .map((ele, index) => {
           return {
+            index,
             title: ele.children[0].children[0].data,
             link: this.baseUrl + ele.children[0].attribs.href,
           };
