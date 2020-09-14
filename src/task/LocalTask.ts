@@ -171,9 +171,8 @@ export class LocalTask implements ITask {
       chapter.book = book;
       chapter.content = res;
       chapter.title = titleUrlMap.title;
-
       try {
-        await chapter.save();
+        await Chapter.saveChapter(chapter);
       } catch (error) {
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
         throw error;
