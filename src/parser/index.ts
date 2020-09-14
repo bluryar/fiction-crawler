@@ -1,0 +1,1 @@
+export { XbiqugeLaParser } from './XbiqugeLaParser';

@@ -1,0 +1,10 @@
+{"message":"数据库连接失败, 请检查数据库配置文件和网络...","level":"error","timestamp":"2020-09-14T03:51:49.836Z"}
+{"message":"ER_DUP_ENTRY: Duplicate entry '唐砖-孑与2' for key 'IDX_9a180d22ddb2ef9d496539e534'","code":"ER_DUP_ENTRY","errno":1062,"sqlMessage":"Duplicate entry '唐砖-孑与2' for key 'IDX_9a180d22ddb2ef9d496539e534'","sqlState":"23000","index":0,"sql":"INSERT INTO `book`(`created_at`, `updated_at`, `id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, DEFAULT, DEFAULT, '唐砖', '孑与2', 'http://www.xbiquge.la/files/article/image/0/993/993s.jpg', '    云烨一直以为自己是一个超级极恋家的人，哪怕把自己放在火星，也会绑架火星人让他们送自己地球。现在麻烦了，自己如何才能从贞观二年回到公元两千一零年？\\n')","name":"QueryFailedError","query":"INSERT INTO `book`(`created_at`, `updated_at`, `id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, DEFAULT, DEFAULT, ?, ?, ?, ?)","parameters":["唐砖","孑与2","http://www.xbiquge.la/files/article/image/0/993/993s.jpg","    云烨一直以为自己是一个超级极恋家的人，哪怕把自己放在火星，也会绑架火星人让他们送自己地球。现在麻烦了，自己如何才能从贞观二年回到公元两千一零年？\n"],"__tag":1,"level":"error","timestamp":"2020-09-14T03:51:49.836Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T08:34:24.301Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T08:34:24.305Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T08:35:26.253Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T08:35:26.257Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T08:37:15.826Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T08:37:15.830Z"}
+{"message":"无法处理以下任务，请手动处理或重试：","level":"error","timestamp":"2020-09-14T08:40:47.238Z"}
+{"message":"this.contentFailQueue: [object Object],[object Object]","level":"error","timestamp":"2020-09-14T08:40:47.242Z"}

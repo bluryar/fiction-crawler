@@ -1,0 +1,67 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import assert = require('assert');
+
+import { LocalTask } from '../../src/task/LocalTask';
+import { Downloader } from '../../src/Downloader';
+import { XbiqugeLaParser } from '../../src/parser';
+import { getConnectionByEnv } from '../../src/DbConnect';
+import { Connection, getManager } from 'typeorm';
+import { Book, Chapter } from '../../src/entity';
+// import { before, beforeEach, it } from 'mocha';
+
+let connection: Connection;
+let dl = new Downloader();
+let parser = new XbiqugeLaParser();
+describe('src/task/LocalTask.ts', async function () {
+  before(async function () {
+    connection = await getConnectionByEnv();
+  });
+  beforeEach(async () => {
+    let manager = getManager();
+    await manager.delete(Chapter, {});
+    await manager.delete(Book, {});
+  });
+
+  it('LocalTask#handlingFailQueue', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
+    this.timeout(15000);
+
+    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    let book = new Book();
+    book.title = '1';
+    book.author = '1';
+    book.summary = '1';
+    book.coverImgLink = '1';
+    const book2 = await book.save();
+    task.contentFailQueue.set(book2, [
+      { title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
+    ]);
+    await task.handlingFailQueue(1);
+    let chapters = await Chapter.findOne({});
+    assert(chapters.title === '第一章 天黑别出门');
+  });
+  it('LocalTask#getDetailPage', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
+    this.timeout(15000);
+    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
+
+    let books: Book[] = await Book.find({});
+    assert(books.length === 1);
+    assert(books[0].title === '牧神记');
+  });
+  it('LocalTask#getContentPage', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
+    this.timeout(15000);
+    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    await task.getContentPage([{ title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' }]);
+
+    let chapters: Chapter[] = await Chapter.find({});
+    assert(chapters.length === 1);
+    assert(chapters[0].title === '第一章 天黑别出门');
+  });
+
+  after(async () => {
+    await connection.close();
+  });
+});

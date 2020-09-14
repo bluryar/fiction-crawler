@@ -1,0 +1,24 @@
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:17:17.817Z"}
+{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'fiction'","level":"error","timestamp":"2020-09-10T13:17:17.821Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:23:10.542Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:23:10.542Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:24:04.615Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:24:04.619Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:24:31.846Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:24:31.850Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:25:57.273Z"}
+{"level":"error","timestamp":"2020-09-10T13:25:57.277Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:28:32.819Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:28:32.823Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:30:31.134Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:30:31.138Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:32:49.925Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:32:49.929Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:36:12.986Z"}
+{"name":"RepositoryNotFoundError","message":"No repository for \"Book\" was found. Looks like this entity is not registered in current \"default\" connection?","level":"error","timestamp":"2020-09-10T13:36:12.986Z"}
+{"message":"数据库连接失败","level":"error","timestamp":"2020-09-10T13:37:20.790Z"}
+{"level":"error","timestamp":"2020-09-10T13:37:20.794Z"}
+{"message":"创建书本对象失败","level":"error","timestamp":"2020-09-10T13:51:10.072Z"}
+{"message":"ER_DUP_ENTRY: Duplicate entry '里寡妇-李二' for key 'IDX_9a180d22ddb2ef9d496539e534'","code":"ER_DUP_ENTRY","errno":1062,"sqlMessage":"Duplicate entry '里寡妇-李二' for key 'IDX_9a180d22ddb2ef9d496539e534'","sqlState":"23000","index":0,"sql":"INSERT INTO `book`(`id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, '里寡妇', '李二', 'fk', 'fk')","name":"QueryFailedError","query":"INSERT INTO `book`(`id`, `title`, `author`, `coverImgLink`, `summary`) VALUES (DEFAULT, ?, ?, ?, ?)","parameters":["里寡妇","李二","fk","fk"],"level":"error","timestamp":"2020-09-10T13:51:10.076Z"}
+{"message":"创建书本对象失败","level":"error","timestamp":"2020-09-10T13:52:08.021Z"}
+{"message":"QueryFailedError: ER_DUP_ENTRY: Duplicate entry '里寡妇-李二' for key 'IDX_9a180d22ddb2ef9d496539e534'\n    at new QueryFailedError (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\src\\error\\QueryFailedError.ts:9:9)\n    at Query.<anonymous> (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\src\\driver\\mysql\\MysqlQueryRunner.ts:167:37)\n    at Query.<anonymous> (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\Connection.js:526:10)\n    at Query._callback (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\Connection.js:488:16)\n    at Query.Sequence.end (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\sequences\\Sequence.js:83:24)\n    at Query.ErrorPacket (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\sequences\\Query.js:92:8)\n    at Protocol._parsePacket (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\Protocol.js:291:23)\n    at Parser._parsePacket (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\Parser.js:433:10)\n    at Parser.write (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\Parser.js:43:10)\n    at Protocol.write (c:\\Users\\blury\\VscodeProject\\2020\\Spider\\Crawler\\node_modules\\mysql\\lib\\protocol\\Protocol.js:38:16)","level":"error","timestamp":"2020-09-10T13:52:08.040Z"}

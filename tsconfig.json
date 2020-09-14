@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "lib": ["ES2018", "dom"],
+    "module": "CommonJS",
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": "build/",
+    "rootDirs": ["src/", "test/"],
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+  },
+  "exclude": ["node_modules"]
+}
