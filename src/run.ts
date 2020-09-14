@@ -4,10 +4,10 @@ import { getConnectionByEnv } from './DbConnect';
 import { LocalTask } from './task/LocalTask';
 
 async function run() {
-  const dl = new Downloader();
+  const downloader = new Downloader();
   const parser = new XbiqugeLaParser();
   const connection = await getConnectionByEnv();
-  const task = new LocalTask(parser, dl, connection);
+  const task = new LocalTask({ parser, downloader, connection });
 
   await task.run('http://www.xbiquge.la/paihangbang/');
 }

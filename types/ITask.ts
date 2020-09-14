@@ -1,5 +1,7 @@
+import { Connection } from 'typeorm';
 import { Book } from '../src/entity';
-import { IChapters } from './IParser';
+import { IDownloader } from './IDownloader';
+import { IChapters, IParser } from './IParser';
 
 export enum TASK_ERROR_TYPE {
   HTTP_ERROR,
@@ -7,6 +9,9 @@ export enum TASK_ERROR_TYPE {
 }
 
 export interface ITaskOptions {
+  parser: IParser;
+  downloader: IDownloader;
+  connection: Connection;
   /** 并行任务数，default=2 */
   parallel?: number;
 

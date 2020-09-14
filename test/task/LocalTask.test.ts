@@ -10,7 +10,7 @@ import { Book, Chapter } from '../../src/entity';
 // import { before, beforeEach, it } from 'mocha';
 
 let connection: Connection;
-let dl = new Downloader();
+let downloader = new Downloader();
 let parser = new XbiqugeLaParser();
 describe('src/task/LocalTask.ts', async function () {
   before(async function () {
@@ -26,7 +26,7 @@ describe('src/task/LocalTask.ts', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
 
-    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
     let book = new Book();
     book.title = '1';
     book.author = '1';
@@ -44,7 +44,7 @@ describe('src/task/LocalTask.ts', async function () {
   it('LocalTask#getDetailPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
-    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
     await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
 
     let books: Book[] = await Book.find({});
@@ -55,7 +55,7 @@ describe('src/task/LocalTask.ts', async function () {
   it('LocalTask#getContentPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
-    let task = new LocalTask(parser, dl, connection, { detailPageTimeout: 0 });
+    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
     await task.getContentPage([
       { index: 1, title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
     ]);

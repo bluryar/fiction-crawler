@@ -19,13 +19,13 @@ export class LocalTask implements ITask {
   private connection: Connection;
 
   // eslint-disable-next-line max-params
-  public constructor(parser: IParser, downloader: IDownloader, connection: Connection, options?: ITaskOptions) {
+  public constructor(options?: ITaskOptions) {
     this.detailFailQueue = [];
     this.contentFailQueue = new Map<Book, IChapters[]>();
 
-    this.parser = parser;
-    this.downloader = downloader;
-    this.connection = connection;
+    this.parser = options.parser;
+    this.downloader = options.downloader;
+    this.connection = options.connection;
 
     this.options = {
       ...{
