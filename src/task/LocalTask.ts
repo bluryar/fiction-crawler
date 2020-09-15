@@ -32,7 +32,7 @@ export class LocalTask implements ITask {
       ...{
         parallel: 1,
         detailPageTimeout: 2 * 60 * 1000,
-        contentPageTimeout: 100,
+        contentPageTimeout: 200,
         failQueueRetry: 2,
         downloadRetry: 10,
         downloadTimeout: 10000,
@@ -61,10 +61,12 @@ export class LocalTask implements ITask {
       await this.handlingFailQueue();
     } catch (error) {
       if (error.__tag === TASK_ERROR_TYPE.HTTP_ERROR) {
+        logger.error(error);
         logger.error('http请求错误，请检查网络后重启...');
-      } else if (error.__tag === TASK_ERROR_TYPE.DB_ERROR)
+      } else if (error.__tag === TASK_ERROR_TYPE.DB_ERROR) {
+        logger.error(error);
         logger.error('数据库连接失败, 请检查数据库配置文件和网络...');
-      else logger.info('未知错误，请查看日志...');
+      } else logger.info('未知错误，请查看日志...');
 
       logger.error(error);
       console.log(error);
