@@ -95,8 +95,8 @@ export class LocalTask implements ITask {
     }
     if (this.contentFailQueue.size > 0) {
       for (const [book, chapters] of this.contentFailQueue) {
-        await this.getContentPage(chapters, book);
         this.contentFailQueue.delete(book);
+        await this.getContentPage(chapters, book);
       }
     }
 
@@ -129,22 +129,22 @@ export class LocalTask implements ITask {
       }
 
       const res = this.parser.parseDetail(detailPageHtml);
-      const book = new Book();
+      let book = new Book();
       book.author = res.author;
       book.summary = res.summary;
       book.title = res.title;
       book.coverImgLink = res.coverImgLink;
 
       try {
-        await book.save();
+        book = await book.save();
         logger.info(`${res.title}简介信息已经入库...`);
       } catch (error) {
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
         if (this.options.greedyMode && error.code === 'ER_DUP_ENTRY') {
-          // TODO 可以增加一个TaskOption----greedyMode来启动这个
           logger.info(
             `<<${res.title}>> 已经存在，由于开启贪心模式，因此会尝试获取这本书的缺失部分，尽管已经这本书已经下载完全了`,
           );
+          book = await Book.findOne({ where: { author: book.author, title: book.title } });
         } else throw error; // 如果遇到数据库错误，就立即退出程序
       }
 
@@ -184,14 +184,15 @@ export class LocalTask implements ITask {
       chapter.book = book;
       chapter.content = Buffer.from(res);
       chapter.title = titleUrlMap.title;
+
       try {
         await Chapter.gzipChapterContent(chapter).save();
       } catch (error) {
-        if (this.options.greedyMode && error.code === 'ER_DUP_ENTRY') {
-          continue; // 对于章节而已，已经下载过的直接跳过
-        }
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
-        throw error;
+        if (this.options.greedyMode && error.code === 'ER_DUP_ENTRY') {
+          logger.info(`${chapter.title} 已经在数据库中...`);
+          continue;
+        } else throw error; // 如果遇到数据库错误，就立即退出程序
       }
 
       logger.info(`章节 ${titleUrlMap.title} 已经入库`);
@@ -200,9 +201,3 @@ export class LocalTask implements ITask {
     if (httpErrorArr.length > 0) throw bundleHttpError(httpErrorArr); // 集中处理HTTP请求错误
   }
 }
-
-// TODO 修正《:"ER_DUP_ENTRY: Duplicate entry 》 引起的数据库连接错误，需要在Chapter实体上增加一个唯一键，然后在次增加逻辑，当遇到DUP_ENTRY时，不再退出程序。
-// 对于getDetailPage，需要校验在DetailPage获得的连接数与数据库中的Chapters数是否一致，否则应该放行，如果一直，则需要跳过这本书
-// 对于getContentPage，则无视DUP约束，当遇到DUP错误时跳过。
-
-// 以上功能与失败处理方法有冲突：失败处理会尽可能保证书籍的章节完整性，因此该功能需要谨慎实现以减少不必要的HTTP请求数

@@ -1,4 +1,5 @@
 import { IDownloader } from '../types/IDownloader';
+import { HttpsAgent } from 'agentkeepalive';
 import { logger } from './Logger';
 import got from 'got';
 
@@ -22,6 +23,11 @@ export class Downloader implements IDownloader {
       const res = await got(url, {
         retry: this.retry,
         timeout: this.timeout,
+        headers: {
+          'user-agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36 Edg/85.0.564.51',
+          connection: 'keep-alive',
+        },
         hooks: {
           beforeRetry: [
             (options, error, retryCount) => {
@@ -32,7 +38,6 @@ export class Downloader implements IDownloader {
         },
       });
       console.log('下载成功');
-      logger.info('下载成功');
       return res.body;
     } catch (error) {
       console.log(`尝试 GET - ${url} 失败...`);
