@@ -32,7 +32,7 @@ export class LocalTask implements ITask {
       ...{
         parallel: 1,
         detailPageTimeout: 2 * 60 * 1000,
-        contentPageTimeout: 200,
+        contentPageTimeout: 333,
         failQueueRetry: 2,
         downloadRetry: 10,
         downloadTimeout: 10000,
