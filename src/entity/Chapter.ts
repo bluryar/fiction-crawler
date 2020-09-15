@@ -5,7 +5,7 @@ import { Book } from './Book';
 import { MyBasicEntity } from './_Basic';
 
 @Entity()
-@Index(['title', 'book'], { unique: true })
+@Index(['title', 'book', 'index'], { unique: true })
 export class Chapter extends MyBasicEntity {
   public static gzipChapterContent(chapter: Chapter): Chapter {
     chapter.content = gzipSync(chapter.content);
