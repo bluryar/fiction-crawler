@@ -1,5 +1,4 @@
 import { IDownloader } from '../types/IDownloader';
-import { HttpsAgent } from 'agentkeepalive';
 import { logger } from './Logger';
 import got from 'got';
 
