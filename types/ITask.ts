@@ -44,6 +44,9 @@ export interface ITaskOptions {
 
   /** 将尝试重试仍然失败的任务写进文件中，需要指定一个目录路径 */
   failTaskToWriteInDir?: string;
+
+  /** 尽量获取更多的内容，尽管某些内容已经在数据库中了，仍然想要补齐其缺失的某些部分 */
+  greedyMode?: boolean; // 这一项会无视数据库中的唯一主键约束
 }
 
 export interface ITask {

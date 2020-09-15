@@ -38,6 +38,7 @@ export class LocalTask implements ITask {
         downloadTimeout: 10000,
         closeDBConnection: true,
         failTaskToWriteInDir: path.join(__dirname, '../../', 'out', '/'),
+        greedyMode: true, // 这一项会无视数据库中的唯一主键约束
       },
       ...options,
     };
@@ -136,15 +137,16 @@ export class LocalTask implements ITask {
 
       try {
         await book.save();
+        logger.info(`${res.title}简介信息已经入库...`);
       } catch (error) {
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
-        if (error.code === 'ER_DUP_ENTRY') {
-          // TODO
-        }
-        throw error; // 如果遇到数据库错误，就立即退出程序
+        if (this.options.greedyMode && error.code === 'ER_DUP_ENTRY') {
+          // TODO 可以增加一个TaskOption----greedyMode来启动这个
+          logger.info(
+            `<<${res.title}>> 已经存在，由于开启贪心模式，因此会尝试获取这本书的缺失部分，尽管已经这本书已经下载完全了`,
+          );
+        } else throw error; // 如果遇到数据库错误，就立即退出程序
       }
-
-      logger.info(`${res.title}简介信息已经入库...`);
 
       // 如果不希望函数进行深层次的解析，应该将nest置为false，中止函数进一步解析
       if (nest) await this.getContentPage(res.chapters, book);
@@ -185,6 +187,9 @@ export class LocalTask implements ITask {
       try {
         await Chapter.gzipChapterContent(chapter).save();
       } catch (error) {
+        if (this.options.greedyMode && error.code === 'ER_DUP_ENTRY') {
+          continue; // 对于章节而已，已经下载过的直接跳过
+        }
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
         throw error;
       }

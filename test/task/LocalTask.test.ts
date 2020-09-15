@@ -47,6 +47,12 @@ describe('src/task/LocalTask.ts', async function () {
     let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
     await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
 
+    try {
+      await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
+    } catch (error) {
+      assert(!error);
+    }
+
     let books: Book[] = await Book.find({});
     assert(books.length === 1);
     assert(books[0].title === '牧神记');
