@@ -8,6 +8,11 @@ export enum TASK_ERROR_TYPE {
   DB_ERROR,
 }
 
+export interface failContentObject {
+  key: Book;
+  value: IChapters[];
+}
+
 export interface ITaskOptions {
   parser: IParser;
   downloader: IDownloader;
@@ -36,6 +41,9 @@ export interface ITaskOptions {
 
   /** 完成任务或者异常退出时,是否关闭数据库连接 (默认关闭) */
   closeDBConnection?: boolean;
+
+  /** 将尝试重试仍然失败的任务写进文件中，需要指定一个目录路径 */
+  failTaskToWriteInDir?: string;
 }
 
 export interface ITask {

@@ -1,28 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, SelectQueryBuilder } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index } from 'typeorm';
+import { gzipSync, unzipSync } from 'zlib';
 
 import { Book } from './Book';
 import { MyBasicEntity } from './_Basic';
 
 @Entity()
+@Index(['title', 'book'], { unique: true })
 export class Chapter extends MyBasicEntity {
-  public static saveChapter(chapter: Chapter) {
-    return Chapter.createQueryBuilder()
-      .insert()
-      .into(Chapter)
-      .values({
-        title: chapter.title,
-        index: chapter.index,
-        content: () => `COMPRESS("${chapter.content}")`,
-        book: chapter.book,
-      })
-      .execute();
+  public static gzipChapterContent(chapter: Chapter): Chapter {
+    chapter.content = gzipSync(chapter.content);
+    return chapter;
+  }
+  public static unzipChapterContent(chapter: Chapter): Chapter {
+    chapter.content = unzipSync(chapter.content);
+    return chapter;
   }
 
   @PrimaryGeneratedColumn()
   public id: number;
 
   @Column({ type: 'blob' })
-  public content: Buffer | string;
+  public content: Buffer;
 
   @Column({ type: 'smallint' })
   public index: number;

@@ -1,6 +1,7 @@
 import { Connection } from 'typeorm';
+import path from 'path';
 
-import { sleep, divideArray, bundleHttpError } from '../helper';
+import { sleep, divideArray, bundleHttpError, dumpFailQueue } from '../helper';
 import { logger } from '../Logger';
 import { Book, Chapter } from '../entity';
 
@@ -36,6 +37,7 @@ export class LocalTask implements ITask {
         downloadRetry: 5,
         downloadTimeout: 10000,
         closeDBConnection: true,
+        failTaskToWriteInDir: path.join(__dirname, '../../', 'out', '/'),
       },
       ...options,
     };
@@ -74,20 +76,26 @@ export class LocalTask implements ITask {
 
   public async handlingFailQueue(retry = this.options.failQueueRetry): Promise<void> {
     if (retry === 0) {
-      logger.error('无法处理以下任务，请手动处理或重试：');
-      if (this.detailFailQueue.length > 0) logger.error(`this.detailFailQueue: ${this.detailFailQueue.toString()}`);
-      if (this.contentFailQueue.size > 0) {
-        for (const [book, chapters] of this.contentFailQueue) {
-          logger.error(`this.contentFailQueue: ${[book, chapters]}`);
-        }
+      logger.error('无法部分失败任务，请手动处理或重试');
+      if (this.detailFailQueue.length > 0 || this.contentFailQueue.size > 0) {
+        dumpFailQueue(this.options.failTaskToWriteInDir, this.detailFailQueue, this.contentFailQueue);
       }
+      // 将任务Dump到一个文件夹中
       return;
     }
 
-    if (this.detailFailQueue.length > 0) await this.getDetailPage(this.detailFailQueue);
+    if (this.detailFailQueue.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < this.detailFailQueue.length; i++) {
+        // 遍历一遍失败任务队列，如果还有任务不成功，会被放回队列尾部，但是此次遍历的次数不会超过源队列的长度
+        let url = this.detailFailQueue.shift();
+        await this.getDetailPage([url]);
+      }
+    }
     if (this.contentFailQueue.size > 0) {
       for (const [book, chapters] of this.contentFailQueue) {
         await this.getContentPage(chapters, book);
+        this.contentFailQueue.delete(book);
       }
     }
 
@@ -130,6 +138,9 @@ export class LocalTask implements ITask {
         await book.save();
       } catch (error) {
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
+        if (error.code === 'ER_DUP_ENTRY') {
+          // TODO
+        }
         throw error; // 如果遇到数据库错误，就立即退出程序
       }
 
@@ -169,10 +180,10 @@ export class LocalTask implements ITask {
       const chapter = new Chapter();
       chapter.index = titleUrlMap.index;
       chapter.book = book;
-      chapter.content = res;
+      chapter.content = Buffer.from(res);
       chapter.title = titleUrlMap.title;
       try {
-        await Chapter.saveChapter(chapter);
+        await Chapter.gzipChapterContent(chapter).save();
       } catch (error) {
         error.__tag = TASK_ERROR_TYPE.DB_ERROR;
         throw error;
@@ -190,5 +201,3 @@ export class LocalTask implements ITask {
 // 对于getContentPage，则无视DUP约束，当遇到DUP错误时跳过。
 
 // 以上功能与失败处理方法有冲突：失败处理会尽可能保证书籍的章节完整性，因此该功能需要谨慎实现以减少不必要的HTTP请求数
-
-// TODO 压缩存储
