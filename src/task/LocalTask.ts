@@ -30,15 +30,15 @@ export class LocalTask implements ITask {
 
     this.options = {
       ...{
-        parallel: 2,
-        detailPageTimeout: 10 * 60 * 1000,
-        contentPageTimeout: 333,
+        parallel: 1,
+        detailPageTimeout: 2 * 60 * 1000,
+        contentPageTimeout: 100,
         failQueueRetry: 2,
-        downloadRetry: 5,
+        downloadRetry: 10,
         downloadTimeout: 10000,
         closeDBConnection: true,
         failTaskToWriteInDir: path.join(__dirname, '../../', 'out', '/'),
-        greedyMode: true, // 这一项会无视数据库中的唯一主键约束
+        greedyMode: false, // 这一项会无视数据库中的唯一主键约束
       },
       ...options,
     };
