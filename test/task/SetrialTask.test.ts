@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import assert = require('assert');
 
-import { LocalTask } from '../../src/task/LocalTask';
+import { SerialTask } from '../../src/task/SerialTask';
 import { Downloader } from '../../src/Downloader';
 import { XbiqugeLaParser } from '../../src/parser';
 import { getConnectionByEnv } from '../../src/DbConnect';
@@ -26,7 +26,7 @@ describe('src/task/LocalTask.ts', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
 
-    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
+    let task = new SerialTask({ parser, downloader, connection, detailPageTimeout: 0 });
     let book = new Book();
     book.title = '1';
     book.author = '1';
@@ -41,16 +41,16 @@ describe('src/task/LocalTask.ts', async function () {
     assert(chapters.title === '第一章 天黑别出门');
   });
 
-  it('LocalTask#getDetailPage', async function () {
+  it('SerialTask#getDetailPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
-    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
+    let task = new SerialTask({ parser, downloader, connection, detailPageTimeout: 0 });
     await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
 
     try {
       await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
     } catch (error) {
-      assert(!error);
+      assert(!!error);
     }
 
     let books: Book[] = await Book.find({});
@@ -61,7 +61,7 @@ describe('src/task/LocalTask.ts', async function () {
   it('LocalTask#getContentPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout(15000);
-    let task = new LocalTask({ parser, downloader, connection, detailPageTimeout: 0 });
+    let task = new SerialTask({ parser, downloader, connection, detailPageTimeout: 0 });
     await task.getContentPage([
       { index: 1, title: '第一章 天黑别出门', link: 'http://www.xbiquge.la/15/15409/8163818.html' },
     ]);

@@ -17,8 +17,18 @@ export interface ITaskOptions {
   parser: IParser;
   downloader: IDownloader;
   connection: Connection;
-  /** 并行任务数，default=2 */
-  parallel?: number;
+
+  /**
+   * 是否将DetailPage和HomePage看作独立（并行）的任务，
+   * 如果选择让任务串行（Serial），那么应该让函数getDetailPage会嵌套进行getContentPage，
+   * 为什么这一项不是让请求并发的执行呢？私以为没这个必要，只需要合理的设置请求间隔（xxxPageTimeout），
+   * 爬虫会用一个大致的速度执行，而且经过测试，这些DAO版小说网站请求经常丢失，而且私以为不应该用太过分
+   * 的频率加重对方的服务器载荷
+   *
+   * 如果要让爬虫真正的并行，应该怎么做？ 运行多个ParallelTask就可以
+   * ParallelTask会使用redis作为存储每次getXXXPage的内容
+   *  */
+  parallel?: boolean;
 
   /** 每本小说完成后的间隔时间（单位：ms）, 默认为10分钟 */
   detailPageTimeout?: number;
@@ -44,40 +54,4 @@ export interface ITaskOptions {
 
   /** 将尝试重试仍然失败的任务写进文件中，需要指定一个目录路径 */
   failTaskToWriteInDir?: string;
-
-  /** 尽量获取更多的内容，尽管某些内容已经在数据库中了，仍然想要补齐其缺失的某些部分 */
-  greedyMode?: boolean; // 这一项会无视数据库中的唯一主键约束
-}
-
-export interface ITask {
-  /** 收集小说简介页的失败任务队列 */
-  detailFailQueue: string[];
-
-  /** 收集小说章节内容页的失败任务队列 */
-  contentFailQueue: Map<Book, IChapters[]>;
-
-  /**
-   * 核心实现方法，启动一系列任务--数据库连接，爬虫下载
-   */
-  run: (rankPageUrl: string) => Promise<void>;
-
-  /**
-   * 处理两个失败任务队列的方法
-   */
-  handlingFailQueue: (retry: number) => Promise<void>;
-
-  /**
-   * 获取想要下载的书本的链接数组，此方法不进行数据库操作
-   */
-  getHomePage: (homePageUrl: string) => Promise<string[]>;
-
-  /**
-   * 根据getHomePage获取的目标书本数组，进行下载简介信息和章节链接（以供下一阶段使用），然后进行数据库操作
-   */
-  getDetailPage: (detailPagesUrl: string[], nest: boolean) => Promise<void>;
-
-  /**
-   * 根据getDetailPage获取的章节链接数组，进行下载（章节内容），然后进行数据库操作
-   */
-  getContentPage: (contentPagesUrl: IChapters[], book?: Book) => Promise<void>;
 }

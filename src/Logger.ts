@@ -6,9 +6,16 @@ export const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({
-      filename: `error-${new Date().getFullYear()}/${new Date().getMonth()}/${new Date().getDate()}.log`,
+      filename: `error.log`,
       dirname: 'logs',
       level: 'error',
+    }),
+  ],
+  exceptionHandlers: [
+    new winston.transports.File({
+      filename: `uncaught-error.log`,
+      dirname: 'logs',
+      level: 'crit',
     }),
   ],
 });

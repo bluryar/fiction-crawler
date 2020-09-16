@@ -1,6 +1,7 @@
 import { IDownloader } from '../types/IDownloader';
 import { logger } from './Logger';
 import got from 'got';
+import { TASK_ERROR_TYPE } from '../types/ITask';
 
 export class Downloader implements IDownloader {
   private retry: number;
@@ -40,6 +41,7 @@ export class Downloader implements IDownloader {
       return res.body;
     } catch (error) {
       console.log(`尝试 GET - ${url} 失败...`);
+      error.__tag = TASK_ERROR_TYPE.HTTP_ERROR;
       throw error;
     }
   }

@@ -3,6 +3,22 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from 'typeor
 import { Chapter } from './Chapter';
 import { MyBasicEntity } from './_Basic';
 
+export enum TYPE {
+  未分类,
+  玄幻,
+  奇幻,
+  修真,
+  仙侠,
+  都市,
+  青春,
+  历史,
+  穿越,
+  网游,
+  竞技,
+  科幻,
+  灵异,
+}
+
 @Entity()
 @Index(['title', 'author'], { unique: true })
 export class Book extends MyBasicEntity {
@@ -20,6 +36,15 @@ export class Book extends MyBasicEntity {
 
   @Column()
   public summary: string;
+
+  @Column({ default: true })
+  public finish: boolean;
+
+  @Column({ type: 'enum', enum: TYPE, default: TYPE.未分类 })
+  public type: TYPE;
+
+  @Column({ default: 0 })
+  public rank: number;
 
   @OneToMany((type) => Chapter, (chapters) => chapters.book, { cascade: true })
   public chapters: Chapter[];
