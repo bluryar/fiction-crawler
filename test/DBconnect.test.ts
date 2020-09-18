@@ -1,23 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import assert = require('assert');
-import { getManager, MoreThanOrEqual } from 'typeorm';
+import { Connection, getManager, MoreThanOrEqual } from 'typeorm';
 import fs from 'fs';
 import path from 'path';
-import { getConnectionByEnv } from '../src/DbConnect';
+import { getMysqlConnectionByEnv, getRedisConnectionByEnv } from '../src/DbConnect';
 import { Book, Chapter } from '../src/entity';
+import { Redis } from 'ioredis';
 
+let mysqlConnection: Connection;
+let redisConnection: Redis;
 describe('src/DbConnect.ts', () => {
   it('Entity CRUD should work', async () => {
     try {
-      const connect = await getConnectionByEnv();
-
       const manager = getManager();
-
-      const res = await manager.count(Book);
-      console.log(res);
-
-      await manager.delete(Chapter, {});
-      await manager.delete(Book, {});
 
       let book = new Book();
       book.author = '李二';
@@ -60,10 +55,42 @@ describe('src/DbConnect.ts', () => {
       } catch (error) {
         console.log(error);
       }
-
-      await connect.close();
     } catch (error) {
       console.log(error);
     }
+  });
+
+  it('getRedisConnectionByEnv Connect well', async () => {
+
+    const res = await redisConnection.set('test', 'test');
+    assert(res === 'OK');
+    const res2 = await redisConnection.get('test');
+    assert(res2 === 'test');
+    const res3 = await redisConnection.del('test');
+    assert(res3 === 1);
+
+    const res4 = await redisConnection.lrange('fkfk', 0, -1);
+    assert(res4.length === 0);
+    const res5 = await redisConnection.rpush('test2', JSON.stringify([{ test: 1 }, { test2: 2 }]));
+    assert(res5 === 1);
+
+    const res6 = await redisConnection.lpop('test2');
+    console.log(res6);
+  });
+
+  before(async function () {
+    mysqlConnection = await getMysqlConnectionByEnv();
+    redisConnection = await getRedisConnectionByEnv('test');
+  });
+  beforeEach(async () => {
+    let manager = getManager();
+    await manager.delete(Chapter, {});
+    await manager.delete(Book, {});
+    await redisConnection.flushdb();
+  });
+
+  after(async () => {
+    await mysqlConnection.close();
+    await redisConnection.disconnect();
   });
 });

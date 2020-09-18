@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index } from 'typeorm';
 import { gzipSync, unzipSync } from 'zlib';
+import { IChapters } from '../../types/IParser';
 
 import { Book } from './Book';
 import { MyBasicEntity } from './_Basic';
@@ -13,6 +14,16 @@ export class Chapter extends MyBasicEntity {
   }
   public static unzipChapterContent(chapter: Chapter): Chapter {
     chapter.content = unzipSync(chapter.content);
+    return chapter;
+  }
+
+  public static async saveOne(book: Book, rawChapter: IChapters, content: string): Promise<Chapter> {
+    let chapter = new Chapter();
+    chapter.index = rawChapter.index;
+    chapter.title = rawChapter.title;
+    chapter.book = book;
+    chapter.content = Buffer.from(content);
+    chapter = await Chapter.gzipChapterContent(chapter).save();
     return chapter;
   }
 

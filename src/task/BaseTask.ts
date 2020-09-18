@@ -21,7 +21,10 @@ export class BaseTask {
   public options: ITaskOptions = {
     downloader: null,
     parser: null,
-    connection: null,
+    mysqlConnection: null,
+    redisConnection: null,
+
+    homePageUrl: '',
     parallel: null,
     detailPageTimeout: 2 * 60 * 1000,
     contentPageTimeout: 333,
@@ -34,7 +37,7 @@ export class BaseTask {
 
   protected downloader: IDownloader;
   protected parser: IParser;
-  protected connection: Connection;
+  protected mysqlConnection: Connection;
 
   public constructor(options?: ITaskOptions) {
     this.options = { ...this.options, ...options };
@@ -44,22 +47,26 @@ export class BaseTask {
     this.downloader = this.options.downloader;
     this.downloader.setRetry(this.options.downloadRetry);
     this.downloader.setTimeout(this.options.downloadTimeout);
-    this.connection = this.options.connection;
+    this.mysqlConnection = this.options.mysqlConnection;
   }
 
-  public async run(rankPageUrl: string): Promise<void> {
+  public async run(): Promise<void> {
     try {
-      await this.setupRunOrder(rankPageUrl);
+      await this.setupRunOrder();
       // . 尝试处理失败任务 //////////
-      logger.info(`准备尝试开始处理任务：< ${rankPageUrl} > 遇到的多次失效URL`);
+      logger.info(`准备尝试开始处理任务：< ${this.options.homePageUrl} > 遇到的多次失效URL`);
       await this.handlingFailQueue();
     } catch (error) {
       outermostErrorHandle(error);
     }
     if (this.options.closeDBConnection) {
       // 某些情况下，并不希望关闭数据库的连接
-      await this.connection.close();
-      logger.info('数据库关闭');
+      await this.mysqlConnection.close();
+      logger.info('关闭数据库连接');
+    }
+    if (this.options.redisConnection !== null) {
+      await this.options.redisConnection.disconnect();
+      logger.info('关闭Redis连接接');
     }
   }
 
@@ -92,19 +99,19 @@ export class BaseTask {
     if (this.detailFailQueue.length > 0 || this.contentFailQueue.size > 0) await this.handlingFailQueue(retry - 1);
   }
 
-  public setupRunOrder(rankPageUrl: string): Promise<void> {
+  public setupRunOrder(): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  public getHomePage(homePageUrl: string): Promise<void> | Promise<Buffer> | Promise<string[]> {
+  public getHomePage(): Promise<void> | Promise<Buffer> | Promise<string[]> {
     throw new Error('Method not implemented.');
   }
   public getDetailPage(
-    detailPagesUrl: string[],
+    detailPagesUrl?: string[],
     nest = !this.options.parallel,
   ): Promise<void> | Promise<Buffer> | Promise<Map<Book, IChapters[]>> {
     throw new Error('Method not implemented.');
   }
-  public getContentPage(contentPagesUrl: IChapters[], book?: Book): Promise<void> | Promise<Buffer> | Promise<string> {
+  public getContentPage(contentPagesUrl?: IChapters[], book?: Book): Promise<void> | Promise<Buffer> | Promise<string> {
     throw new Error('Method not implemented.');
   }
 }

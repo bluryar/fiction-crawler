@@ -1,15 +1,21 @@
 import { Downloader } from './Downloader';
 import { XbiqugeLaParser } from './parser';
-import { getConnectionByEnv } from './DbConnect';
+import { getMysqlConnectionByEnv } from './DbConnect';
 import { SerialTask } from './task/';
 
 async function run() {
   const downloader = new Downloader();
   const parser = new XbiqugeLaParser();
-  const connection = await getConnectionByEnv();
-  const task = new SerialTask({ parser, downloader, connection });
+  const mysqlConnection = await getMysqlConnectionByEnv();
+  
+  const task = new SerialTask({
+    parser,
+    downloader,
+    mysqlConnection,
+    homePageUrl: 'http://www.xbiquge.la/paihangbang/',
+  });
 
-  await task.run('http://www.xbiquge.la/paihangbang/');
+  await task.run();
 }
 
 run();

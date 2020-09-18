@@ -1,3 +1,4 @@
+import { Redis } from 'ioredis';
 import { Connection } from 'typeorm';
 import { Book } from '../src/entity';
 import { IDownloader } from './IDownloader';
@@ -6,6 +7,7 @@ import { IChapters, IParser } from './IParser';
 export enum TASK_ERROR_TYPE {
   HTTP_ERROR,
   DB_ERROR,
+  REDIS_ERROR,
 }
 
 export interface failContentObject {
@@ -16,7 +18,10 @@ export interface failContentObject {
 export interface ITaskOptions {
   parser: IParser;
   downloader: IDownloader;
-  connection: Connection;
+  mysqlConnection: Connection;
+  redisConnection?: Redis;
+
+  homePageUrl: string;
 
   /**
    * 是否将DetailPage和HomePage看作独立（并行）的任务，

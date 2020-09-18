@@ -1,4 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from 'typeorm';
+import { IDetail } from '../../types/IParser';
+import { TASK_ERROR_TYPE } from '../../types/ITask';
 
 import { Chapter } from './Chapter';
 import { MyBasicEntity } from './_Basic';
@@ -22,6 +24,27 @@ export enum TYPE {
 @Entity()
 @Index(['title', 'author'], { unique: true })
 export class Book extends MyBasicEntity {
+  public static async findById(id: number | string) {
+    try {
+      const res = await Book.findOne({ where: { id } });
+      return res;
+    } catch (error) {
+      error.__tag = TASK_ERROR_TYPE.DB_ERROR;
+      throw error; // 如果遇到数据库错误，就立即退出程序
+    }
+  }
+
+  public static async saveOne(rawBook: IDetail): Promise<Book> {
+    let book = new Book();
+    book.author = rawBook.author;
+    book.coverImgLink = rawBook.coverImgLink;
+    book.title = rawBook.title;
+    book.summary = rawBook.summary;
+    // TODO 其他字段
+    book = await book.save();
+    return book;
+  }
+
   @PrimaryGeneratedColumn()
   public id: number;
 
