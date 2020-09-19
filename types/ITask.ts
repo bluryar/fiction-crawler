@@ -19,7 +19,7 @@ export interface ITaskOptions {
   parser: IParser;
   downloader: IDownloader;
   mysqlConnection: Connection;
-  redisConnection?: Redis;
+  redisConnection: Redis;
 
   homePageUrl: string;
 

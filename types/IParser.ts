@@ -1,3 +1,5 @@
+import { TYPE } from '../src/entity';
+
 export interface IParser {
   baseUrl: string;
   parseHomePage: (rawText: string) => string[];
@@ -16,6 +18,8 @@ export interface IDetail {
   author: string;
   coverImgLink: string;
   summary: string;
+  type: TYPE;
+  finish: boolean;
   chapters: IChapters[];
 }
 

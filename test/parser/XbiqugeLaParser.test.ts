@@ -15,6 +15,8 @@ describe('src/Parser/* Parser#parseHomePage', () => {
     const detailHtml = fs.readFileSync('test/assets/DetailPage.html').toString();
     const res = new XbiqugeLaParser().parseDetail(detailHtml);
     assert(/http/gi.test(res.coverImgLink));
+    assert(res.finish === true);
+    assert(res.type === '玄幻');
     assert(res.chapters.length > 10);
     assert(/html/gi.test(res.chapters[0].link));
     assert(res.author.length > 0);

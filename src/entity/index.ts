@@ -1,2 +1,2 @@
-export { Book } from './Book';
-export { Chapter } from './Chapter';
+export * from './Book';
+export * from './Chapter';
