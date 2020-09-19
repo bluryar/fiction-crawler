@@ -57,7 +57,7 @@ export class Book extends MyBasicEntity {
   @Column()
   public coverImgLink: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: '1000' })
   public summary: string;
 
   @Column({ default: true })
