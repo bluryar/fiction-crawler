@@ -22,7 +22,7 @@ export const getMysqlConnectionByEnv = () => {
   });
 };
 
-export const getRedisConnectionByEnv = (baseUrl: String) => {
+export const getRedisConnectionByEnv = async (baseUrl: String) => {
   const envStr = process.env.NODE_ENV || 'dev';
   const { host, port, password, database, keyPrefix } = redis[envStr];
 
@@ -34,5 +34,6 @@ export const getRedisConnectionByEnv = (baseUrl: String) => {
     keyPrefix: keyPrefix + baseUrl + '#',
   });
 
-  return redisConnection;
+  if (/PONG/gi.test(await redisConnection.ping())) return redisConnection;
+  else throw new Error('Redis连接失败');
 };

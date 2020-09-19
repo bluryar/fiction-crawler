@@ -7,9 +7,9 @@ import { logger } from '../Logger';
 import { BaseTask } from './BaseTask';
 import { RedisHandler } from './RedisHandler';
 
-interface IChapterByBookId {
+export interface IChapterByBookId {
   bookId: number;
-  chapterMap: IChapters;
+  chapter: IChapters;
 }
 
 /**
@@ -45,35 +45,43 @@ export class ParallelTask extends BaseTask {
       if (detailPageHtml === null) continue;
 
       let parsedRes = this.parser.parseDetail(detailPageHtml);
-
-      let book = await Book.saveOne(parsedRes);
+      let book;
+      try {
+        book = await Book.saveOne(parsedRes);
+      } catch (error) {
+        await this.redisHandler.enqueue(RedisHandler.BOOK_SUMMARY_URLS, url);
+        logger.error('小说简介信息入库遇到问题，将url送回redis队列');
+        throw error;
+      }
       logger.info(`${book.title}简介信息已经入库...`);
 
       await this.redisHandler.enqueue(
         RedisHandler.CHAPTERS_CONTENT_URLS,
         parsedRes.chapters.map((chapter) => JSON.stringify({ bookId: book.id, chapter })),
       );
-
+      logger.info(`已经将${parsedRes.title}的${parsedRes.chapters.length}个章节加入Redis缓存`);
       url = await this.redisHandler.dequeue(RedisHandler.BOOK_SUMMARY_URLS);
 
       await sleep(this.options.detailPageTimeout); // 休眠
     }
+    logger.info('已经完成小说简介页/[detailPage]的解析');
   }
 
   public async getContentPage(): Promise<void> {
     let chaptersRes = await this.redisHandler.dequeue(RedisHandler.CHAPTERS_CONTENT_URLS);
     while (chaptersRes !== null) {
-      let { bookId, chapterMap }: IChapterByBookId = JSON.parse(chaptersRes);
+      let { bookId, chapter }: IChapterByBookId = JSON.parse(chaptersRes);
+      logger.info(`准备解析${chapter}`);
       let book = await Book.findById(bookId);
 
-      let contentPageHtml = await this.downloader.dlContentAndCollectError(chapterMap, book, this.contentFailQueue);
+      let contentPageHtml = await this.downloader.dlContentAndCollectError(chapter, book, this.contentFailQueue);
       if (contentPageHtml === null) continue;
 
       const res = this.parser.parseContent(contentPageHtml);
 
-      await Chapter.saveOne(book, chapterMap, res);
+      await Chapter.saveOne(book, chapter, res);
 
-      logger.info(`章节 ${chapterMap.title} 已经入库`);
+      logger.info(`章节 ${chapter.title} 已经入库`);
 
       chaptersRes = await this.redisHandler.dequeue(RedisHandler.CHAPTERS_CONTENT_URLS);
       await sleep(this.options.contentPageTimeout); // 休眠

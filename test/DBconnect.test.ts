@@ -61,6 +61,7 @@ describe('src/DbConnect.ts', () => {
   });
 
   it('getRedisConnectionByEnv Connect well', async () => {
+    let resss = await redisConnection.lpop('fkfkf');
     const res = await redisConnection.set('test', 'test');
     assert(res === 'OK');
     const res2 = await redisConnection.get('test');

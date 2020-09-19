@@ -14,5 +14,7 @@ export function outermostErrorHandle(error: Error) {
       logger.info('未知错误，请查看日志...');
       break;
   }
-  logger.error(error);
+  logger.error(error.name)
+  logger.error(error.message);
+  logger.error(error.stack);
 }

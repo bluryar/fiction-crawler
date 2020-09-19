@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import assert = require('assert');
 
-import { ParallelTask } from '../../src/task/';
+import { ParallelTask, IChapterByBookId } from '../../src/task/';
 import { Downloader } from '../../src/Downloader';
 import { XbiqugeLaParser } from '../../src/parser';
 import { getMysqlConnectionByEnv, getRedisConnectionByEnv } from '../../src/DbConnect';
@@ -48,7 +48,7 @@ describe('src/task/ParallelTask.ts', async function () {
 
   it('getDetailPage and getContentPage', async function () {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
-    this.timeout(15000);
+    this.timeout(150000);
     let task = new ParallelTask({
       parser,
       downloader,
@@ -77,8 +77,8 @@ describe('src/task/ParallelTask.ts', async function () {
     await redisConnection.flushdb();
     let len3 = await redisConnection.lpush(
       RedisHandler.CHAPTERS_CONTENT_URLS,
-      JSON.stringify({ bookId: res2['bookId'], chapterMap: temp1 }),
-      JSON.stringify({ bookId: res2['bookId'], chapterMap: temp2 }),
+      JSON.stringify({ bookId: res2['bookId'], chapter: temp1 }),
+      JSON.stringify({ bookId: res2['bookId'], chapter: temp2 }),
     );
     assert(len3 === 2);
     await task.getContentPage();
