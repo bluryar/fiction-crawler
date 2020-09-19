@@ -31,6 +31,7 @@ describe('src/task/SerialTask.ts', async function () {
       downloader,
       mysqlConnection,
       detailPageTimeout: 0,
+      redisConnection: null,
       homePageUrl: 'http://www.xbiquge.la/paihangbang/',
     });
     let book = new Book();
@@ -55,6 +56,7 @@ describe('src/task/SerialTask.ts', async function () {
       downloader,
       mysqlConnection,
       detailPageTimeout: 0,
+      redisConnection: null,
       homePageUrl: 'http://www.xbiquge.la/paihangbang/',
     });
     await task.getDetailPage(['http://www.xbiquge.la/15/15409/'], false);
@@ -78,6 +80,7 @@ describe('src/task/SerialTask.ts', async function () {
       downloader,
       mysqlConnection,
       detailPageTimeout: 0,
+      redisConnection: null,
       homePageUrl: 'http://www.xbiquge.la/paihangbang/',
     });
     await task.getContentPage([

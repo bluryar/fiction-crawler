@@ -57,29 +57,36 @@ describe('src/task/ParallelTask.ts', async function () {
       detailPageTimeout: 0,
       homePageUrl: 'http://www.xbiquge.la/paihangbang/',
     });
-    let len = await redisConnection.lpush(RedisHandler.BOOK_SUMMARY_URLS, 'http://www.xbiquge.la/10/10489/');
-    assert(len === 1);
+    let len = await redisConnection.lpush(
+      RedisHandler.BOOK_SUMMARY_URLS,
+      'http://www.xbiquge.la/10/10489/',
+      'http://www.xbiquge.la/13/13959/',
+    );
+    assert(len === 2);
     await task.getDetailPage();
     let len2 = await redisConnection.llen(RedisHandler.BOOK_SUMMARY_URLS);
     assert(len2 === 0);
 
+    // 测试getContentPage
     let res = await redisConnection.lpop(RedisHandler.CHAPTERS_CONTENT_URLS);
     let res2 = JSON.parse(res);
     assert(res2['bookId']);
     assert(typeof res2['chapter'].index === 'number');
-    let temp: IChapters = res2['chapter'];
+    let temp1: IChapters = res2['chapter'];
+    let temp2 = JSON.parse(await redisConnection.lpop(RedisHandler.CHAPTERS_CONTENT_URLS))['chapter'];
     await redisConnection.flushdb();
     let len3 = await redisConnection.lpush(
       RedisHandler.CHAPTERS_CONTENT_URLS,
-      JSON.stringify({ bookId: res2['bookId'], chapterMap: temp }),
+      JSON.stringify({ bookId: res2['bookId'], chapterMap: temp1 }),
+      JSON.stringify({ bookId: res2['bookId'], chapterMap: temp2 }),
     );
-    assert(len3 === 1);
+    assert(len3 === 2);
     await task.getContentPage();
     let len4 = await redisConnection.llen(RedisHandler.CHAPTERS_CONTENT_URLS);
     assert(len4 === 0);
 
     let res3 = await Chapter.find({});
-    assert(res3.length === 1);
+    assert(res3.length === 2);
     assert(res3[0].content.length > 0);
   });
 

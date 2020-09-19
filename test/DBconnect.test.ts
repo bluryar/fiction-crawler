@@ -61,7 +61,6 @@ describe('src/DbConnect.ts', () => {
   });
 
   it('getRedisConnectionByEnv Connect well', async () => {
-
     const res = await redisConnection.set('test', 'test');
     assert(res === 'OK');
     const res2 = await redisConnection.get('test');
@@ -82,11 +81,16 @@ describe('src/DbConnect.ts', () => {
     mysqlConnection = await getMysqlConnectionByEnv();
     redisConnection = await getRedisConnectionByEnv('test');
   });
-  beforeEach(async () => {
+  beforeEach(async function () {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-this
+    this.timeout(12000);
     let manager = getManager();
     await manager.delete(Chapter, {});
     await manager.delete(Book, {});
-    await redisConnection.flushdb();
+    let res = await redisConnection.ping();
+    console.log(res);
+    res = await redisConnection.flushdb();
+    console.log(res);
   });
 
   after(async () => {
