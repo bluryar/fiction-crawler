@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import assert = require('assert');
 import fs from 'fs';
-import { XbiqugeLaParser } from '../../src/parser';
+import { XbiqugeLaFinishBookParser, XbiqugeLaParser } from '../../src/parser';
 
 describe('src/Parser/* Parser#parseHomePage', () => {
   it('should return a string array with lots of anchor', () => {
@@ -28,5 +28,14 @@ describe('src/Parser/* Parser#parseHomePage', () => {
     const res = new XbiqugeLaParser().parseContent(contentHtml);
     assert(res.length > 0);
     assert(/\n\n/gi.test(res));
+  });
+
+  it('XbiquegeFinishBookParser', async function () {
+    const homeHtml = fs.readFileSync('test/assets/HomePage.html').toString();
+    const res = new XbiqugeLaFinishBookParser().parseHomePage(homeHtml);
+    assert(res.length > 0);
+    assert(res[0] === 'http://www.xbiquge.la/0/656/');
+    assert(res[res.length - 1] === 'http://www.xbiquge.la/24/24173/');
+    assert(/http/gi.test(res[0]));
   });
 });

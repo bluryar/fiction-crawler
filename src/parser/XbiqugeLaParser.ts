@@ -80,3 +80,19 @@ export class XbiqugeLaParser implements IParser {
     return Date.now() - new Date(input).valueOf() > 30 * 24 * 3600 * 1000; // 只要成功一个月未更新就认为是完本小说
   }
 }
+
+export class XbiqugeLaFinishBookParser extends XbiqugeLaParser {
+  public parseHomePage(rawText: string): string[] {
+    const set: Set<string> = new Set<string>();
+    const $ = cheerio.load(rawText);
+    
+    const ATagNodes = $('#main > div:nth-child(8) > ul:nth-child(2) > li:not(.ltitle):not(.more) > a').toArray();
+    for (const node of ATagNodes) {
+      set.add(node.attribs.href);
+    }
+
+    logger.info(`解析完成，一共获取${ATagNodes.length}条书本链接,共过滤掉${ATagNodes.length - set.size}条重复链接...`);
+
+    return Array.from(set);
+  }
+}

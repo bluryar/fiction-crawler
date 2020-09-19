@@ -1,1 +1,1 @@
-export { XbiqugeLaParser } from './XbiqugeLaParser';
+export * from './XbiqugeLaParser';
