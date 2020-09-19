@@ -1,3 +1,4 @@
+import { raw } from 'sqlstring';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from 'typeorm';
 import { IDetail } from '../../types/IParser';
 import { TASK_ERROR_TYPE } from '../../types/ITask';
@@ -40,6 +41,8 @@ export class Book extends MyBasicEntity {
     book.coverImgLink = rawBook.coverImgLink;
     book.title = rawBook.title;
     book.summary = rawBook.summary;
+    book.type = rawBook.type;
+    book.finish = rawBook.finish;
     // TODO 其他字段
     book = await book.save();
     return book;
