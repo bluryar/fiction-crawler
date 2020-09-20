@@ -1,7 +1,6 @@
 import { raw } from 'sqlstring';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index } from 'typeorm';
-import { IDetail } from '../../types/IParser';
-import { TASK_ERROR_TYPE } from '../../types/ITask';
+import { IDetail, TASK_ERROR_TYPE } from '../index';
 
 import { Chapter } from './Chapter';
 import { MyBasicEntity } from './_Basic';

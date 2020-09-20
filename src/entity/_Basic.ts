@@ -1,5 +1,5 @@
 import { BaseEntity, CreateDateColumn } from 'typeorm';
-import { TASK_ERROR_TYPE } from '../../types/ITask';
+import { TASK_ERROR_TYPE } from '../index';
 
 export abstract class MyBasicEntity extends BaseEntity {
   @CreateDateColumn()

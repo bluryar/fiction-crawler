@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { IChapters } from '../types/IParser';
-import { failContentObject } from '../types/ITask';
+import { IChapters, failContentObject } from './index';
 import { Book } from './entity';
 
 export const sleep = (timeout: number, callback?: Function) => {
@@ -40,7 +39,10 @@ export function bundleHttpError(arr: Error[]) {
 export function dumpFailQueue(dirPath: string, detailFailQueue: string[], contentFailQueue: Map<Book, IChapters[]>) {
   const isFileExit = fs.existsSync(dirPath);
   if (!isFileExit) fs.mkdirSync(dirPath, { recursive: true });
-  fs.writeFileSync(path.resolve(dirPath, 'failDetailPageTask.json'), JSON.stringify({ detailFailQueue: detailFailQueue }));
+  fs.writeFileSync(
+    path.resolve(dirPath, 'failDetailPageTask.json'),
+    JSON.stringify({ detailFailQueue: detailFailQueue }),
+  );
   fs.writeFileSync(path.resolve(dirPath, 'failContentPageTask.json'), stringifyBookMap(contentFailQueue));
 }
 

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Index } from 'typeorm';
 import { gzipSync, unzipSync } from 'zlib';
-import { IChapters } from '../../types/IParser';
+import { IChapters } from '../index';
 
 import { Book } from './Book';
 import { MyBasicEntity } from './_Basic';

@@ -1,4 +1,4 @@
-import { TASK_ERROR_TYPE } from '../types/ITask';
+import { TASK_ERROR_TYPE } from './index';
 import { logger } from './Logger';
 
 export function outermostErrorHandle(error: Error) {
@@ -14,7 +14,7 @@ export function outermostErrorHandle(error: Error) {
       logger.info('未知错误，请查看日志...');
       break;
   }
-  logger.error(error.name)
+  logger.error(error.name);
   logger.error(error.message);
   logger.error(error.stack);
 }

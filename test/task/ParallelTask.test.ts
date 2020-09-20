@@ -8,8 +8,8 @@ import { getMysqlConnectionByEnv, getRedisConnectionByEnv } from '../../src/DbCo
 import { Connection, getManager } from 'typeorm';
 import { Book, Chapter } from '../../src/entity';
 import { Redis } from 'ioredis';
-import { RedisHandler } from '../../src/task/RedisHandler';
-import { IChapters } from '../../types/IParser';
+import { RedisHandler } from '../../src/RedisHandler';
+import { IChapters } from '../../src/index';
 // import { before, beforeEach, it } from 'mocha';
 
 let mysqlConnection: Connection;

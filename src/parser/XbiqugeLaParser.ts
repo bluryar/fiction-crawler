@@ -1,4 +1,4 @@
-import { IParser, IDetail } from '../../types/IParser';
+import { IParser, IDetail } from '../index';
 import cheerio from 'cheerio';
 import { logger } from '../Logger';
 import { TYPE } from '../entity';
@@ -85,7 +85,7 @@ export class XbiqugeLaFinishBookParser extends XbiqugeLaParser {
   public parseHomePage(rawText: string): string[] {
     const set: Set<string> = new Set<string>();
     const $ = cheerio.load(rawText);
-    
+
     const ATagNodes = $('#main > div:nth-child(8) > ul:nth-child(2) > li:not(.ltitle):not(.more) > a').toArray();
     for (const node of ATagNodes) {
       set.add(node.attribs.href);

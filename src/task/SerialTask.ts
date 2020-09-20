@@ -2,8 +2,7 @@ import { sleep } from '../helper';
 import { logger } from '../Logger';
 import { Book, Chapter } from '../entity';
 
-import { IChapters } from '../../types/IParser';
-import { ITaskOptions, TASK_ERROR_TYPE } from '../../types/ITask';
+import { IChapters, ITaskOptions, TASK_ERROR_TYPE } from '../index';
 import { BaseTask } from './BaseTask';
 
 /**

@@ -1,9 +1,7 @@
-import { IDownloader } from '../types/IDownloader';
+import { IDownloader, TASK_ERROR_TYPE, IChapters } from './index';
 import { logger } from './Logger';
 import got from 'got';
-import { TASK_ERROR_TYPE } from '../types/ITask';
 import { Book } from './entity';
-import { IChapters } from '../types/IParser';
 
 export interface IDetailPageDownload {
   url: string;

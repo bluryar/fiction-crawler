@@ -1,8 +1,6 @@
 import path from 'path';
 import { Connection } from 'typeorm';
-import { IDownloader } from '../../types/IDownloader';
-import { IChapters, IParser } from '../../types/IParser';
-import { ITaskOptions } from '../../types/ITask';
+import { IDownloader, IChapters, IParser, ITaskOptions } from '../index';
 import { Book } from '../entity';
 import { outermostErrorHandle } from '../ErrorHandler';
 import { dumpFailQueue } from '../helper';

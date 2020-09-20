@@ -1,11 +1,9 @@
-import { Redis } from 'ioredis';
-import { IChapters } from '../../types/IParser';
-import { ITaskOptions } from '../../types/ITask';
+import { IChapters,ITaskOptions } from '../index';
 import { Book, Chapter } from '../entity';
 import { sleep } from '../helper';
 import { logger } from '../Logger';
 import { BaseTask } from './BaseTask';
-import { RedisHandler } from './RedisHandler';
+import { RedisHandler } from '../RedisHandler';
 
 export interface IChapterByBookId {
   bookId: number;
@@ -71,7 +69,7 @@ export class ParallelTask extends BaseTask {
     let chaptersRes = await this.redisHandler.dequeue(RedisHandler.CHAPTERS_CONTENT_URLS);
     while (chaptersRes !== null) {
       let { bookId, chapter }: IChapterByBookId = JSON.parse(chaptersRes);
-      logger.info(`准备解析${chapter}`);
+      logger.info(`准备解析${chapter.title}`);
       let book = await Book.findById(bookId);
 
       let contentPageHtml = await this.downloader.dlContentAndCollectError(chapter, book, this.contentFailQueue);

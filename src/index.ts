@@ -1,13 +1,65 @@
+import { Book } from './entity';
+import { TYPE } from '../src/entity';
 import { Redis } from 'ioredis';
 import { Connection } from 'typeorm';
-import { Book } from '../src/entity';
-import { IDownloader } from './IDownloader';
-import { IChapters, IParser } from './IParser';
+
+export * from './entity';
+export * from './parser';
+export * from './Downloader';
+export * from './task';
+export * from './DbConnect';
+export * from './RedisHandler';
 
 export enum TASK_ERROR_TYPE {
   HTTP_ERROR,
   DB_ERROR,
   REDIS_ERROR,
+}
+
+export enum PARSER_TYPE {
+  HOME_PAGE,
+  DETAIL_PAGE,
+  CONTENT_PAGE,
+}
+
+export interface IDownloader {
+  download: (url: string) => Promise<string>;
+  setTimeout: (val: number) => void;
+  setRetry: (val: number) => void;
+  dlDetailAndCollectError: (url: string, queue: string[]) => Promise<string | null>;
+  dlContentAndCollectError: (
+    chapterMap: IChapters,
+    book: Book,
+    queue: Map<Book, IChapters[]>,
+  ) => Promise<string | null>;
+}
+
+export interface IParser {
+  baseUrl: string;
+  parseHomePage: (rawText: string) => string[];
+  parseDetail: (rawText: string) => IDetail;
+  parseContent: (rawText: string) => string;
+}
+
+export interface IDetail {
+  title: string;
+  author: string;
+  coverImgLink: string;
+  summary: string;
+  type: TYPE;
+  finish: boolean;
+  chapters: IChapters[];
+}
+
+export interface IChapters {
+  index: number;
+  title: string;
+  link: string;
+}
+
+export interface IContent {
+  title: string;
+  content: string;
 }
 
 export interface failContentObject {
