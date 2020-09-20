@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import Redis from 'ioredis';
 
 import { createConnection } from 'typeorm';
-import { mysql, redis } from '../dbconfig';
+import { mysql, redis } from './dbconfig';
 import { Book, Chapter } from './entity';
 
 export const getMysqlConnectionByEnv = () => {
